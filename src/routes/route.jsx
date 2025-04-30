@@ -28,7 +28,7 @@ const publicRoutes = (isLoggedIn) => ({
         { path: '/signup', element: <Register /> },
         // {path: '/contact', element: <Contact/>},
         // {path: '/about', element: <About/>},
-        // {path: '*', element: <NoPageFound/>},
+        {path: '*', element: <NoPageFound/>},
     ],
 });
 
