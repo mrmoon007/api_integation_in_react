@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import ApiService from '../services/apiService';
 
 export default function ExamForm() {
@@ -8,6 +8,7 @@ export default function ExamForm() {
   const [answers, setAnswers] = useState({});
   const [timeLeft, setTimeLeft] = useState(600);
   const [result, setResult] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchExam = async () => {
@@ -41,6 +42,12 @@ export default function ExamForm() {
     }
   };
 
+  const handleReset = () => {
+    setAnswers({});
+    setResult(null);
+    setTimeLeft(600); // Reset timer to initial value
+  };
+
   if (result) {
     return (
       <div className="p-4">
@@ -59,6 +66,12 @@ export default function ExamForm() {
             </p>
           </div>
         ))}
+        <button 
+          onClick={() => navigate('/exam')}
+          className="mt-4 bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700"
+        >
+          Back to Exam List
+        </button>
       </div>
     );
   }
