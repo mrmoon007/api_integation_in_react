@@ -8,7 +8,7 @@ import Header from './Header';
 import Sidebar from './Sidebar';
 
 const Layout = () => {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Change to true for default open state
 
     const handleLogout = async (e) => {
         e.preventDefault();
@@ -33,22 +33,22 @@ const Layout = () => {
     return (
         <div className="flex min-h-screen bg-gray-50">
             <ToastContainer/>
-            <button 
-                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="fixed z-50 top-4 left-4 bg-green-700 text-white p-2 rounded-full shadow-lg md:hidden"
-            >
-                {isSidebarOpen ? <FiX size={24} /> : <FiMenu size={24} />}
-            </button>
+            {/* Move button inside the main content area */}
+            <Sidebar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
 
-            <Sidebar isSidebarOpen={isSidebarOpen} />
+            <div className="flex-1 flex flex-col min-h-screen relative">
+                <button 
+                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                    className="absolute z-50 top-4 left-4 bg-green-700 text-white p-2 rounded-full shadow-lg md:hidden"
+                >
+                    {isSidebarOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+                </button>
 
-            <div className="flex-1 flex flex-col min-h-screen">
                 <Header 
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
                     handleLogout={handleLogout}
                 />
-
                 <main className="flex-1 p-4 md:p-8 overflow-auto">
                     <Outlet />
                 </main>
