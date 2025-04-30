@@ -4,6 +4,7 @@ import Login from "../pages/Login";
 import Register from '../pages/Register';
 import Home from '../pages/Home';
 import Exam from '../pages/Exam';
+import ExamForm from '../pages/ExamForm';
 
 const protectedRoutes = (isLoggedIn) => ({
     path: '/',
@@ -12,6 +13,7 @@ const protectedRoutes = (isLoggedIn) => ({
         { path: '/', element: <Home /> },
         { path: '/home', element: <Home /> },
         { path: '/exam', element: <Exam /> },
+        { path: '/exam/:id', element: <ExamForm /> }, // Changed to use URL parameter
         // {path: '*', element: <NoPageFound/>},
     ],
 });
