@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import * as yup from 'yup';
 import ApiService from '../services/apiService';
 
 export default function ExamForm() {
@@ -7,6 +8,8 @@ export default function ExamForm() {
   const [exam, setExam] = useState(null);
   const [answers, setAnswers] = useState({});
   const [timeLeft, setTimeLeft] = useState(600);
+  const [errors, setErrors] = useState({});
+  const [validationSchema, setValidationSchema] = useState(null); // Add this line
   const [result, setResult] = useState(null);
   const navigate = useNavigate();
 
@@ -15,6 +18,15 @@ export default function ExamForm() {
       try {
         const response = await ApiService.get(`/exams/${id}`);
         setExam(response.data.data);
+        
+        // Initialize validation schema based on questions
+        if (response.data.data?.questions) {
+          const validationFields = {};
+          response.data.data.questions.forEach(q => {
+            validationFields[q.id] = yup.string().required(`Question ${q.id} is required`);
+          });
+          setValidationSchema(yup.object().shape(validationFields));
+        }
       } catch (error) {
         console.error('Error fetching exam:', error);
       }
@@ -27,18 +39,39 @@ export default function ExamForm() {
 
   const handleChange = (qId, value) => {
     setAnswers({ ...answers, [qId]: value });
+    // Clear error for the answered question
+    setErrors(prev => {
+      const newErrors = { ...prev };
+      delete newErrors[qId];
+      return newErrors;
+    });
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrors({});
+
     try {
+      if (validationSchema) {
+        await validationSchema.validate(answers, { abortEarly: false });
+      }
+      
       const formattedAnswers = {
         answers: answers
       };
       
       const response = await ApiService.post(`/exams/${id}/submit`, formattedAnswers);
-      setResult(response.data.data); // Changed to access data.data instead of data.result
+      setResult(response.data.data);
     } catch (error) {
-      console.error('Error submitting exam:', error);
+      if (error.inner) {
+        const newErrors = {};
+        error.inner.forEach(err => {
+          newErrors[err.path] = err.message;
+        });
+        setErrors(newErrors);
+      } else {
+        console.error('Error submitting exam:', error);
+      }
     }
   };
 
@@ -108,10 +141,7 @@ export default function ExamForm() {
         Time Left: {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
       </div>
       
-      <form onSubmit={(e) => {
-        e.preventDefault();
-        handleSubmit();
-      }} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6">
         {exam.questions.map(q => (
           <div key={q.id} className="p-4 border rounded">
             <p className="font-semibold mb-3">{q.question_text}</p>
@@ -136,6 +166,9 @@ export default function ExamForm() {
                 onChange={(e) => handleChange(q.id, e.target.value)}
                 className="w-full p-2 border rounded"
               />
+            )}
+            {errors[q.id] && (
+              <p className="text-red-500 text-sm mt-1">{errors[q.id]}</p>
             )}
           </div>
         ))}
