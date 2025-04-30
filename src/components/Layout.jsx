@@ -1,30 +1,33 @@
 import React, { useState } from 'react';
 import { FiX, FiMenu } from 'react-icons/fi';
 import { Outlet } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import ApiService from '../services/apiService';
 import Header from './Header';
 import Sidebar from './Sidebar';
 
 const Layout = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-    const handleLogout = (e) => {
+    const handleLogout = async (e) => {
         e.preventDefault();
         
-        ApiService.post(`/logout`, []).then((response) => {
+        try {
+            const response = await ApiService.post('/logout');
             if (response.status === 200) {
-                toast.success(`Success Notification !  Logout successfully`, {
+                toast.success('Logout successful!', {
                     position: "top-right"
                 });
                 localStorage.removeItem("accessToken");
                 localStorage.removeItem("userData");
-                window.location.href = '/sign-in'
+                window.location.href = '/sign-in';
             }
-        }).catch((error) => {
-            toast.error(`Error Notification ! ${error}`, {
+        } catch (error) {
+            toast.error(`Logout failed: ${error.message}`, {
                 position: "top-right"
             });
-        });
+        }
     };
 
     return (
