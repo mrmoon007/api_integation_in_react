@@ -88,10 +88,6 @@ const Home = () => {
                         <FaBriefcaseMedical className="h-5 w-5 min-w-[20px]" />
                         <span className={`mx-3 ${!isSidebarOpen && 'hidden'}`}>Medical Units</span>
                     </Link>
-                    <Link to="/chat" className="flex items-center px-6 py-3 text-gray-200 hover:bg-green-700">
-                        <FiMessageSquare className="h-5 w-5 min-w-[20px]" />
-                        <span className={`mx-3 ${!isSidebarOpen && 'hidden'}`}>Messages</span>
-                    </Link>
                     <Link to="/settings" className="flex items-center px-6 py-3 text-gray-200 hover:bg-green-700">
                         <FiSettings className="h-5 w-5 min-w-[20px]" />
                         <span className={`mx-3 ${!isSidebarOpen && 'hidden'}`}>Settings</span>

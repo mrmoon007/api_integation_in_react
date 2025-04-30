@@ -2,7 +2,6 @@ import {Navigate, Outlet} from 'react-router-dom';
 import Login from "../pages/Login";
 import Register from '../pages/Register';
 import Home from '../pages/Home';
-import Chat from '../pages/Chat';
 
 const protectedRoutes = (isLoggedIn) =>
    ({
@@ -11,7 +10,6 @@ const protectedRoutes = (isLoggedIn) =>
         children: [
             {path: '/', element: <Home/>},
             {path: '/home', element: <Home/>},
-            {path: '/chat', element: <Chat/>},
             // {path: '*', element: <NoPageFound/>},
         ],
     })
