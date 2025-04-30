@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FiHome, FiSettings } from 'react-icons/fi';
 import { PiExamDuotone } from 'react-icons/pi';
+import armyLogo from '../assets/images/bd_army_logo.png'
 
 const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
     const location = useLocation();
@@ -12,7 +13,11 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
             bg-gradient-to-b from-green-900 to-green-800 text-white transition-all duration-300 
             fixed md:static h-full min-h-screen z-40`}>
             <div className="p-6 flex items-center space-x-3">
-                <img src="/army-logo.png" alt="Army Logo" className="w-10 h-10" />
+                <img 
+                    src={armyLogo} 
+                    alt="Army Logo" 
+                    className={`${isSidebarOpen ? 'w-10 h-10' : 'w-8 h-8'} transition-all duration-300`}
+                />
                 <h2 className={`text-xl font-bold transition-opacity duration-300 ${!isSidebarOpen ? 'md:hidden' : ''}`}>
                     BA Command Center
                 </h2>
